@@ -1,0 +1,2 @@
+class InvalidPlugin(Exception):
+    pass
