@@ -1,4 +1,6 @@
 import configparser
+
+from pathlib import Path
 from core.settings.ini_config import merge_ini_config_with_defaults
 
 default_ini_config = {
@@ -16,16 +18,6 @@ default_ini_config = {
 
 config_parser = configparser.ConfigParser()
 
-config_parser.read('{{plugin_name}}.conf')
+config_parser.read(Path(__file__).parent / '{{plugin_name}}.conf')
 
 ini_config = merge_ini_config_with_defaults(config_parser, default_ini_config)
-
-# configure your own database if you need
-# DATABASE = {
-#         "ENGINE": 'django.db.backends.postgresql',
-#         "NAME": ini_config['db_conf']['database'],
-#         "USER": ini_config['db_conf']['user'],
-#         "PASSWORD": ini_config['db_conf']['password'],
-#         "HOST": ini_config['db_conf']['host'],
-#         "PORT": ini_config['db_conf']['port']
-# }
