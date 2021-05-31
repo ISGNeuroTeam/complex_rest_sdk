@@ -16,8 +16,6 @@ class Server:
 
         self._app = Bottle()
         self._app.install(ErrorsRestPlugin())
-        del self._app.router.filters['re']
-        del self._app.router.filters['float']
 
     def _error_response(self, code, message):
         """
