@@ -41,8 +41,12 @@ class Command(BaseCommand):
         """
         try:
             urls = import_module(f'{plugin_name}.urls')
-        except ImportError:
-            raise InvalidPlugin('Can\'t import urls.py from plugin directory')
+        except ImportError as exc:
+            if 'urls' in str(exc):
+                raise InvalidPlugin('Can\'t import urls.py from plugin directory')
+            else:
+                raise exc
+
         try:
             urlpatterns = urls.urlpatterns
         except AttributeError as e:

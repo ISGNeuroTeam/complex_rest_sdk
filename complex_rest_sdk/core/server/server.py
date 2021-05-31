@@ -28,16 +28,20 @@ class Server:
             status=code, body={'status': 'error', 'error_message': message}
         )
 
-    def _normal_response(self, load=None, status=http_status.HTTP_200_OK):
+    def _normal_response(self, load=None, status=http_status.HTTP_200_OK, headers=None):
         """
-        Set HTTP status code 200 and add field status: ok
-        :param load:
-        :return:
+        Makes ordinary json response with given load, status and headers
+        :param load: dictionary for body content
+        :param status: http status
+        :param headers: dictionary with http headers
         """
         if not load:
             load = {}
         response.status = status
         response.content_type = 'application/json'
+        if headers:
+            for key, value in headers.items():
+                response.set_header(key, value)
         return load
 
     def add_route(self, url_path, http_method, callback):

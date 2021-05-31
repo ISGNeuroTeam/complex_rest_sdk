@@ -1,6 +1,6 @@
 from core.server import Server
 
-from bottle import request as bottle_request, Response as BottleResponse
+from bottle import request as bottle_request
 
 from .request import Request
 
@@ -33,14 +33,14 @@ class PluginDevServer(Server):
     def _get_bottle_handler_from_view(self, view, http_method):
         def _bottle_handler(*args, **kwargs):
             # make request object from bottle request object
-            request = Request(bottle_request.GET, bottle_request.json)
+            request = Request(bottle_request.GET, bottle_request.json, bottle_request.headers)
 
             # calling view method
             view_obj = view()
             view_handler = getattr(view_obj, http_method)
             response = view_handler(request, *args, **kwargs)
             # return bottle response
-            return self._normal_response(response.data, status=response.status)
+            return self._normal_response(response.data, status=response.status, headers=response.headers)
         return _bottle_handler
 
 
