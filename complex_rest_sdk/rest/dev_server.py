@@ -39,7 +39,6 @@ class PluginDevServer(Server):
             view_obj = view()
             view_handler = getattr(view_obj, http_method)
             response = view_handler(request, *args, **kwargs)
-            print(response.data)
             # return bottle response
             return self._normal_response(response.data, status=response.status)
         return _bottle_handler

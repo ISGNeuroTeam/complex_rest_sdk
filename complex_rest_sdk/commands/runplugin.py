@@ -1,4 +1,6 @@
 import sys
+import logging
+
 from importlib import import_module
 from .basecommand import BaseCommand, CommandError
 from rest.dev_server import PluginDevServer
@@ -25,6 +27,9 @@ class Command(BaseCommand):
 
         # plugin virtual environment
         self.add_plugins_env_dirs_to_sys_path(plugin_name)
+
+        self.create_plugin_logger(plugin_name)
+
         self.run_server(plugin_name, options['port'])
 
     @staticmethod
@@ -86,9 +91,18 @@ class Command(BaseCommand):
 
         return '1'
 
+    @staticmethod
+    def create_plugin_logger(plugin_name):
+        """
+        Configure logging module
+        """
+        logging.basicConfig(
+            level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s %(message)s'
+        )
+
     def run_server(self, plugin_name, port):
         paths = self.get_plugin_paths(plugin_name)
         api_version = self.get_plugin_api_version(plugin_name)
-        server = PluginDevServer(plugin_name, api_version, paths, 'localhost', port)
+        server = PluginDevServer(plugin_name, api_version, paths, 'localhost', port, debug=True)
         server.run()
 
