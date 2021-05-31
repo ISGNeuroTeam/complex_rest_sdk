@@ -31,14 +31,14 @@ class PluginDevServer(Server):
         return f'/{self._plugin_name}/v{self._api_version}/{url_pattern}'
 
     def _get_bottle_handler_from_view(self, view, http_method):
-        def _bottle_handler(*args):
+        def _bottle_handler(*args, **kwargs):
             # make request object from bottle request object
             request = Request(bottle_request.GET, bottle_request.json)
 
             # calling view method
             view_obj = view()
             view_handler = getattr(view_obj, http_method)
-            response = view_handler(request, *args)
+            response = view_handler(request, *args, **kwargs)
             print(response.data)
             # return bottle response
             return self._normal_response(response.data, status=response.status)
