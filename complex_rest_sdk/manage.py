@@ -1,13 +1,7 @@
 import sys
 import importlib
 
-from pathlib import Path
 from commands.basecommand import CommandError
-
-BASE_DIR = Path(__file__).resolve().parent
-
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, str(BASE_DIR))
 
 
 def main():

@@ -17,7 +17,7 @@ python ./manage.py createplugin <plugin_name>
 Your plugin start template will be available in `./plugin_dev/<plugin_name>`. Open it in your favorite IDE. Add `./complex_rest/complex_rest` directory to python paths in your IDE for syntax highlighting and hints.   
 To start dev server run:  
 ```bash
-python ./manage.py runplugin <plugin_name> --port 8080
+python ./manage.py runserver --port 8080
 ```
 Open http://localhost:8080/<plugin_name>/v1/example/
 You must see:  
@@ -70,20 +70,23 @@ from rest.permissions import IsAuthenticated
 class ExampleView(APIView):
     permission_classes = (IsAuthenticated, )
 ```
-4. Write http metod handler. Each http mehthod handler gets request object as first argument and must return response object. To get url params in get method use `request.GET` dictionary. To get body params use `request.data` dictionary.  
-Response object takes two initial arguments: data and http status code. Example:  
+4. Write http metod handler. Each http mehthod handler gets request object as first argument and must return response object.   
+To get url params in get method use `request.GET` dictionary.  
+To get body params use `request.data` dictionary. To get http headers use `request.headers` dictionary.  
+Response object takes  arguments: data and http status code. Example:  
 ```python
 from rest.response import Response, status
 class ExampleView(APIView):
     def post(self, request):
         body_param1 = request.data['param1']
         body_param2 = request.data['param2']
+        user_agent = request.headers['User-Agent']
         # do some logic here
         return Response(
             {
                 'message': 'Hello world',
             },
-            status.HTTP_200_OK
+            status=status.HTTP_200_OK
         )
 ```
 ### urls.py
