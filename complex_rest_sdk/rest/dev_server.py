@@ -5,15 +5,17 @@ from pathlib import Path
 
 from bottle import request as bottle_request
 
+from core.settings import PLUGIN_DEV_DIR
+
 from core.server import Server
 from rest.request import Request
 from rest.exceptions import InvalidPlugin
 
 
 class PluginDevServer(Server):
-    def __init__(self, plugins_dir, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.plugins_dir = Path(plugins_dir)
+        self.plugins_dir = Path(PLUGIN_DEV_DIR)
         self._load_plugins()
 
     def _load_plugins(self):
@@ -118,7 +120,7 @@ class PluginDevServer(Server):
             view_handler = getattr(view_obj, http_method)
             response = view_handler(request, *args, **kwargs)
             # return bottle response
-            return self._normal_response(response.data, status=response.status, headers=response.headers)
+            return self._normal_response(response.data, status=response.status_code, headers=response.headers)
         return _bottle_handler
 
 

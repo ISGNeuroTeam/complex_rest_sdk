@@ -17,7 +17,6 @@ class CommandError(Exception):
 
 class BaseCommand:
     BASE_DIR = Path(__file__).resolve().parent.parent
-    PLUGIN_DEV_DIR = BASE_DIR.parent / 'plugin_dev'
     help = ''
 
     def __init__(self):

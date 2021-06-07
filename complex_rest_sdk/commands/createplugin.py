@@ -1,4 +1,5 @@
 from importlib import import_module
+from core.settings import PLUGIN_DEV_DIR
 from .basecommand import BaseCommand, CommandError
 
 from jinja2 import Template
@@ -54,7 +55,7 @@ class Command(BaseCommand):
         plugin_template_dir = self.BASE_DIR / 'core' / 'templates' / 'plugin_template'
 
         # directory with rendered plugins
-        plugin_dev_dir = self.PLUGIN_DEV_DIR
+        plugin_dev_dir = PLUGIN_DEV_DIR
         plugin_dev_dir.mkdir(exist_ok=True)
 
         self.render_dir(plugin_template_dir, plugin_dev_dir / plugin_name, context)

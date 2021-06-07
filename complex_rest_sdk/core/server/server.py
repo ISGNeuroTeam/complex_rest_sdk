@@ -53,6 +53,12 @@ class Server:
     def get_app(self):
         return self._app
 
+    def wsgi(self, environ, start_response):
+        """
+        Calls bottle wsgi function
+        """
+        return self._app.wsgi(environ, start_response)
+
     def run(self):
         self._app.run(
             host=self._host, port=self._port, debug=self._debug,

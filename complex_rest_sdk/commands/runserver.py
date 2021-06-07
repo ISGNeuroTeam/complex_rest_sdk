@@ -1,6 +1,5 @@
 import logging
 from .basecommand import BaseCommand, CommandError
-from core.settings import PLUGIN_DEV_DIR
 from rest.dev_server import PluginDevServer
 
 
@@ -31,6 +30,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def run_server(port, debug):
-        server = PluginDevServer(PLUGIN_DEV_DIR, 'localhost', port, debug=debug)
+        server = PluginDevServer('localhost', port, debug=debug)
         server.run()
 
