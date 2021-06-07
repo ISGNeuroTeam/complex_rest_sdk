@@ -22,7 +22,7 @@ Your plugin start template will be available in ./plugin_dev/<plugin_name>
 To start developer server run:  
 
 ```bash
-python manage.py runplugin <plugin_name> --port 8080
+python manage.py runserver --port 8080
 ```
 After starting developer server open http://localhost:8080/<plugin_name>/v1/example/
 You must see:  

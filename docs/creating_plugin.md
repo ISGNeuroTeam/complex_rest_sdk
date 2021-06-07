@@ -70,10 +70,7 @@ from rest.permissions import IsAuthenticated
 class ExampleView(APIView):
     permission_classes = (IsAuthenticated, )
 ```
-4. Write http metod handler. Each http mehthod handler gets request object as first argument and must return response object.   
-To get url params in get method use `request.GET` dictionary.  
-To get body params use `request.data` dictionary. To get http headers use `request.headers` dictionary.  
-Response object takes  arguments: data and http status code. Example:  
+4. Write http metod handler. Each http mehthod handler gets request object as first argument and must return response object. Example:  
 ```python
 from rest.response import Response, status
 class ExampleView(APIView):
@@ -89,6 +86,20 @@ class ExampleView(APIView):
             status=status.HTTP_200_OK
         )
 ```
+#### Request object
+Request object has several properties:  
+- `request.GET` - url parameters dictionary for GET request
+- `request.data` - body of the request converted to python dictionary
+- `request.headers` - headers dictionary
+#### Response object
+
+Response object is initialized with three arguments:
+
+- data - positional first argument, python dictionary
+- status - keyword argument, integer, http status code, default 200
+- headers - keyword argument, python dictionary, http headers, default is empty dictionary
+
+
 ### urls.py
 In `urls.py` define `urlpatterns` variable as list of `path` objects. Path objects maps url patterns to views.
 ```python
@@ -227,7 +238,10 @@ log_level = ini_config['logging']['level']
 ### Make tests
 Make tests for your plugin in tests directory. Define subclass of `TestCase` and use `APIClient` to test api. Example:  
 ```python
+import json
 from rest.test import TestCase, APIClient
+
+
 class TestExample(TestCase):
     def setUp(self):
         """
@@ -238,7 +252,7 @@ class TestExample(TestCase):
     def test_hello(self):
         # How to make get requests
         client = APIClient()
-        response = client.get('/{{plugin_name}}/v1/hello/')
+        response = client.get('/example/v1/hello/')
 
         # checking status code
         self.assertEqual(response.status_code, 200)
@@ -246,12 +260,46 @@ class TestExample(TestCase):
         # checking body response
         message = response.data['message']
         self.assertEqual(message, 'Hello')
+
+    def test_example(self):
+        # How to make post requests
+        client = APIClient()
+        # post request with body: {'param1': 42, 'param2': 69}
+        response = client.post(
+            '/example/v1/example/',
+            json.dumps({'param1': 42, 'param2': 69}),
+            content_type='application/json'
+        )
+
+        self.assertEqual(response.status_code, 200)
+        message = response.data['message']
+        self.assertIn('created successfully', message)
+        body_params = response.data['body_params']
+        self.assertEqual(body_params['param1'], 42)
+        self.assertEqual(body_params['param2'], 69)
+
+    def test_not_pass(self):
+        self.assertEqual(1, 2, "Please, make some tests :)")
+
     def tearDown(self):
         """
         define instructions that will be executed after each test method
         """
         pass
 ```
+#### Running tests
+To run all plugin tests:  
+```bash
+# activate virtual environment
+source ./venv/bin/activate
+cd ./complex_rest_sdk
+python ./manage.py test <plugin_name>
+```
+Or you can run specific testcase:  
+```bash
+python ./complex_rest_sdk/manage.py test  example test_example.TestExample
+```
+
 
 ## Deploying plugin
 1. Create plugin archive:  
